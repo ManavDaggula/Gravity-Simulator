@@ -55,12 +55,7 @@ screen.addEventListener("click",(event)=>{
 let inc=0;
 window.setInterval(() => {
     if(state==="play"){
-        // let rect=planet.getBoundingClientRect()
-        // console.log(`top:${rect.y}px\nleft:${rect.x}px`)
-        // planet.style.top = `${inc}px`;
-        // planet.style.left = `${inc}px`;
-        // inc+=10;
-        // console.log(planets)
+        
         for (const index in planets) {
             if(planets.length<=1){break;}
             // console.log(planet)
@@ -88,23 +83,21 @@ window.setInterval(() => {
             planets[index].speedY = planets[index].speedY + accY*0.1
             // console.log(`for ${index} ax=${accX} ay=${accY} iSpeedX=${planets[index].speedX} iSpeedY=${planets[index].speedY}`)
 
-            // //calculating planets displacements
-            // planets[index].posX = planets[index].posX + planets[index].speedX*0.1
-            // planets[index].posY = planets[index].posY + planets[index].speedY*0.1
-            
-            // //moving the planet to new position
-            // planets[index].elementRef.style.left = `${planets[index].posX}px`
-            // planets[index].elementRef.style.top = `${planets[index].posY}px`
         }
-        planets.forEach(planet => {
-            //calculating planets displacements
-            planet.posX = planet.posX + planet.speedX
-            planet.posY = planet.posY + planet.speedY
-
-            //moving the planet to new position
-            planet.elementRef.style.left = `${planet.posX}px`
-            planet.elementRef.style.top = `${planet.posY}px`
-        });
+        
+        if(planets.length>1){
+            planets.forEach(planet => {
+                //calculating planets displacements
+                planet.posX = planet.posX + planet.speedX
+                planet.posY = planet.posY + planet.speedY
+    
+                //moving the planet to new position
+                planet.elementRef.style.left = `${planet.posX}px`
+                planet.elementRef.style.top = `${planet.posY}px`
+    
+                planet.elementRef.textContent = `speedX=${Math.round(planet.speedX*100)/100} speedY=${Math.round(planet.speedY*100)/100}`
+            });
+        }
         // console.log(planets)
     }
 }, 1000);
