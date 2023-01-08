@@ -55,7 +55,7 @@ screen.addEventListener("click",(event)=>{
 let inc=0;
 window.setInterval(() => {
     if(state==="play"){
-        
+        // loop to calculate acceleration and speed components
         for (const index in planets) {
             if(planets.length<=1){break;}
             // console.log(planet)
@@ -85,6 +85,7 @@ window.setInterval(() => {
 
         }
         
+        // loop to displace the planet
         if(planets.length>1){
             planets.forEach(planet => {
                 //calculating planets displacements
@@ -98,7 +99,38 @@ window.setInterval(() => {
                 planet.elementRef.textContent = `speedX=${Math.round(planet.speedX*100)/100} speedY=${Math.round(planet.speedY*100)/100}`
             });
         }
-        // console.log(planets)
+
+        // loop to check planet collisions
+        for (const index in planets){
+            if(planets.length<=1){break;}
+            for(const i in planets){
+                if(index===i){continue;}
+                let distanceX = planets[i].posX-planets[index].posX
+                let distanceY = planets[i].posY-planets[index].posY
+                if(Math.sqrt(Math.pow(distanceX,2)+Math.pow(distanceY,2))<80){
+                    // here collision occurs between planets[index] and planets[i]
+                    console.log(`collision between ${index} and ${i}`)
+                    let newMass = planets[index].mass + planets[i].mass
+                    let newPosX = (planets[index].mass*planets[index].posX + planets[i].mass*planets[i].posX)/newMass
+                    let newPosY = (planets[index].mass*planets[index].posY + planets[i].mass*planets[i].posY)/newMass
+                    let newSpeedX = (planets[index].mass*planets[index].speedX + planets[i].mass*planets[i].speedX)/newMass
+                    let newSpeedY = (planets[index].mass*planets[index].speedY + planets[i].mass*planets[i].speedY)/newMass
+
+                    planets[index].mass = newMass
+                    planets[index].posX = newPosX
+                    planets[index].posY = newPosY
+                    planets[index].speedX = newSpeedX
+                    planets[index].speedY = newSpeedY
+                    planets[index].elementRef.style.left = `${newPosX}px`
+                    planets[index].elementRef.style.top = `${newPosY}px`
+
+                    planets[i].elementRef.remove()
+                    planets.splice(i,1)
+                }
+            }
+        }
+
+        console.log(planets)
     }
 }, 1000);
 
