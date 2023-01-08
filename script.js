@@ -5,6 +5,7 @@ const promptVar = document.querySelector('.prompt')
 const newPlanetButton = document.querySelector(".menu li")
 const clearSpaceButton = document.querySelector(".menu li:last-child")
 var state="play"
+const gravitationConst = 100000;
 promptVar.textContent = "Prompts will appear here."
 var planets = [
     // {
@@ -47,7 +48,7 @@ screen.addEventListener("click",(event)=>{
         state="play"
     }
     else{state="play"}
-    // promptVar.textContent=`state changed to ${state}`
+    promptVar.textContent=`state changed to ${state}`
 })
 
 // let rect=planet.getBoundingClientRect()
@@ -63,7 +64,7 @@ window.setInterval(() => {
         for (const index in planets) {
             if(planets.length<=1){break;}
             // console.log(planet)
-            let COMx = 0, COMy = 0, COMmass = 0, newSpeedX = 0, newSpeedY = 0, accX=0,accY=0;
+            let COMx = 0, COMy = 0, COMmass = 0, newSpeedX = 0, newSpeedY = 0, accX,accY,accR,angle;
             for(const i in planets){
                 if(i!==index){
                     COMx += planets[i].mass*(planets[i].posX - planets[index].posX)
@@ -71,27 +72,39 @@ window.setInterval(() => {
                     COMmass+=planets[i].mass
                 }
             }
-            console.log(`for ${index} ComX=${COMx/COMmass}, ComY=${COMy/COMmass},ComM=${COMmass}`)
-            planets[index].elementRef.textContent = `x=${planets[index].posX},y=${planets[index].posY},i=${index} ComX=${COMx/COMmass}, ComY=${COMy/COMmass},ComM=${COMmass}`
+            COMx=COMx/COMmass;
+            COMy=COMy/COMmass;
+            // console.log(`for ${index} ComX=${COMx/COMmass}, ComY=${COMy/COMmass},ComM=${COMmass}`)
+            // planets[index].elementRef.textContent = `x=${planets[index].posX},y=${planets[index].posY},i=${index} ComX=${COMx}, ComY=${COMy},ComM=${COMmass}`
 
             // calculating acceleration components
-            // accX = 1000*COMmass*Math.sign(COMx)/Math.pow(COMx/COMmass,2)
-            // accY = 1000*COMmass*Math.sign(COMy)/Math.pow(COMy/COMmass,2)
-            // planets[index].elementRef.textContent = `${accX},${accY}`
+            accR = gravitationConst*COMmass/(Math.pow(COMx,2)+Math.pow(COMy,2))
+            accX = accR*COMx/(Math.pow(COMx,2)+Math.pow(COMy,2))
+            accY = accR*COMy/(Math.pow(COMx,2)+Math.pow(COMy,2))
+            // console.log(`for ${index} a=${accR} ax=${accX} ay=${accY}`)
 
             //calculating new newSpeed components
-            // planets[index].speedX += accX
-            // planets[index].speedY += accY
-            // console.log(index,planets[index].posX,planets[index].posY,planets[index].elementRef,planets[index].speedX,planets[index].speedY)
+            planets[index].speedX = planets[index].speedX + accX*0.1
+            planets[index].speedY = planets[index].speedY + accY*0.1
+            // console.log(`for ${index} ax=${accX} ay=${accY} iSpeedX=${planets[index].speedX} iSpeedY=${planets[index].speedY}`)
 
-            //calculating planets displacements
-            // planets[index].posX = planets[index].posX + planets[index].speedX
-            // planets[index].posY = planets[index].posY + planets[index].speedY
-
-            //moving the planet to new position
+            // //calculating planets displacements
+            // planets[index].posX = planets[index].posX + planets[index].speedX*0.1
+            // planets[index].posY = planets[index].posY + planets[index].speedY*0.1
+            
+            // //moving the planet to new position
             // planets[index].elementRef.style.left = `${planets[index].posX}px`
             // planets[index].elementRef.style.top = `${planets[index].posY}px`
         }
+        planets.forEach(planet => {
+            //calculating planets displacements
+            planet.posX = planet.posX + planet.speedX
+            planet.posY = planet.posY + planet.speedY
+
+            //moving the planet to new position
+            planet.elementRef.style.left = `${planet.posX}px`
+            planet.elementRef.style.top = `${planet.posY}px`
+        });
         // console.log(planets)
     }
 }, 1000);

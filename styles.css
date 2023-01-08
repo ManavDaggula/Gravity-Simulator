@@ -32,6 +32,7 @@
 }
 .planet{
     position: absolute;
+    color:yellow;
     width: 80px;
     height: 80px;
     background-color: rgba(0, 0, 255,0.4);
