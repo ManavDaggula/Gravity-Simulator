@@ -1,24 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+require("./script")
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul className="menu">
+        <li>New Planet</li>
+        <li>Clear</li>
+    </ul>
+    <div className="mouse-stat">move your curser inside screen</div>
+    <div className="screen">
+      {/* planets inserted here */}
+    </div>
+    <div className="prompt"></div>
     </div>
   );
 }
